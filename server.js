@@ -33,6 +33,14 @@ server.get('/categories', (req, res) => {
     })
 })
 
+server.get('/category/:id', (req, res) => {
+    Categories.find({}, (err, categories) =>{
+
+        if(err){console.log(handleError(err))}
+        res.json(categories)
+    })
+})
+
 server.post('/todos', (req, res) => {
     console.log(req.query)
     
@@ -41,6 +49,7 @@ server.post('/todos', (req, res) => {
     todo: req.query.todo,
     category: req.query.category
     })
+    res.send('Successfully added element')
 })
 
 server.post('/categories', (req, res) => {
@@ -49,6 +58,7 @@ server.post('/categories', (req, res) => {
     Categories.create({
     category: req.query.category
     })
+    res.send('Successfully added element')
 })
 
 server.put('/todos/:id', (req, res) =>{
