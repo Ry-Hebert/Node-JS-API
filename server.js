@@ -14,7 +14,7 @@ server.use(bodyParser.json());
 Mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 
 server.listen(process.env.PORT || 3001, () =>{
-    console.log('Server is running')
+    console.log('Server is running now')
 })
 
 server.get('/todos', (req, res) => {
