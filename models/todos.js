@@ -7,4 +7,4 @@ const todosSchema = new Schema({
     category: String
 })
 
-module.exports = Mongoose.model('Todos', productISchema)
+module.exports = Mongoose.model('Todos', todosSchema)
