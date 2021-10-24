@@ -1,23 +1,19 @@
-let todos = [{
-    id: 1,
-    taskName: "Task 1",
-    completed: false,
-    category: "Work"
-  },
-  {
-    id: 2,
-    taskName: "Task 2",
-    completed: true,
-    category: "School"
-  },
-  {
-    id: 3,
-    taskName: "Task 3",
-    completed: false,
-    category: "Uncategorized"
-  },
-]
+let todos = []
 let categories = []
+
+let initialValues = async () =>{
+  todos = await fetch('todos')
+  todosJSON = await todos.json()
+  todos = todosJSON
+  console.log(todos)
+
+  categories = await fetch('categories')
+  categories = await categories.json()
+  
+  updateTodos(todos)
+}
+
+initialValues()
 
 const updateTodos = (list) => {
   let taskList = document.querySelector('#taskList')

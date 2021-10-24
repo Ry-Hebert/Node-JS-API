@@ -10,7 +10,7 @@ const server = new Express()
 
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
-server.use(Express.static('public'))
+server.use('/', Express.static('./public'))
 
 Mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 
