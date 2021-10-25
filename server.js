@@ -10,6 +10,8 @@ const server = new Express()
 
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
+server.use(Express.json())
+server.use(Express.urlencoded())
 server.use('/', Express.static('./public'))
 
 Mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -43,12 +45,11 @@ server.get('/category/:id', (req, res) => {
 })
 
 server.post('/todos', (req, res) => {
-    console.log(req.query)
-    
     Todos.create({
-    key: Math.random() * (99999 - 1) + 1,
-    todo: req.query.todo,
-    category: req.query.category
+    id: req.body.id,
+    taskName: req.body.todo,
+    completed:  false,
+    category: req.body.category
     })
     res.send('Successfully added element')
 })
@@ -63,10 +64,13 @@ server.post('/categories', (req, res) => {
 })
 
 server.put('/todos/:id', (req, res) =>{
-    Todos.findById(req.params.id, (err, todo) =>{
+    console.log('hit')
+    Todos.findOne({id: req.params.id}, (err, todo) =>{
         if(err){console.log(handleError(err))}
-        todo.update(req.query, (err) =>{
-            if(err){console.log(handleError(err))}
+        console.log(todo)
+        console.log(req.body)
+        todo.update(req.body, (err) =>{
+            // if(err){console.log(handleError(err))}
             Todos.find({}, (err, todoX) =>{
                 if(err){console.log(handleError(err))}
                 res.json(todoX)
@@ -89,7 +93,7 @@ server.put('/categories/:id', (req, res) =>{
 })
 
 server.delete('/todos/:id', (req, res) =>{
-    Todos.remove({_id: req.params.id}, (err) => {
+    Todos.remove({id: req.params.id}, (err) => {
         if(err){console.log(handleError(err))}
         Todos.find((err, todo) =>{
             if(err){console.log(handleError(err))}

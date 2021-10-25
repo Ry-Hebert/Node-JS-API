@@ -16,6 +16,8 @@ let initialValues = async () =>{
 initialValues()
 
 const updateTodos = (list) => {
+  // initialValues()
+  list = todos
   let taskList = document.querySelector('#taskList')
   taskList.innerHTML = `<ul>`
 
@@ -41,8 +43,8 @@ const updateTodos = (list) => {
 function eventClickHandler(event) {
   // console.log(event)
   // console.log(event.target.id)
-  // console.log(event.target.attributes.buttonFunc.value)
-  // console.log(event.target.attributes.todoId)
+  console.log(event.target.attributes.buttonFunc.value)
+  console.log(event.target.attributes.todoId)
 
   if (event.target.attributes.buttonFunc.value == "complete") {
     completeTodo(event.target.attributes.todoId.value)
@@ -67,13 +69,22 @@ document.querySelector("#addTaskButton").addEventListener('click', () => {
 
     inputBox.value = "";
 
-    todos.push({
+    let bodyObj = {
       id: newId,
-      taskName: newTaskName,
+      todo: newTaskName,
       completed: false,
       category: newCategory
-    })
-    updateTodos(todos);
+    }
+
+    console.log('body Obj')
+    console.log(bodyObj)
+
+    fetch('/todos',{
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(bodyObj)
+    }).then(res => res.json()).then(data => console.log(data)).then(initialValues())
+
     console.log(todos)
   }
 })
@@ -139,7 +150,11 @@ function deleteTodo(id) {
     if (element.id != id) {
       return element;
     }
-
+    fetch(`/todos/${id}`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(element)
+    })
   })
 
   updateTodos(todos)
@@ -154,6 +169,14 @@ function completeTodo(id) {
   todos = todos.filter(element => {
     if (element.id == id) {
       element.completed = !element.completed;
+
+      console.log(element)
+
+      fetch(`/todos/${id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(element)
+      })
     }
     return element;
   })
@@ -192,6 +215,12 @@ const saveTodo = () => {
     if (element.id === todoIdToBeEdited) {
       element.category = selectedCategory.value;
       element.taskName = newTaskName;
+
+      fetch(`/todos/${element.id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(element)
+      })
     }
 
   });
